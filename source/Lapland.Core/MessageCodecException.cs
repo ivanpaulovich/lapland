@@ -4,6 +4,8 @@ namespace Lapland.Core
 
     public sealed class MessageCodecException : Exception
     {
-        
+        public MessageCodecException(string message) : base(message)
+        {
+        }
     }
 }

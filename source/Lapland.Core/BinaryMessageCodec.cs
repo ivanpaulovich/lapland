@@ -12,6 +12,7 @@ namespace Lapland.Core
         public BinaryMessageCodec()
         {
             encoder = new BinaryMessageEncoder();
+            decoder = new BinaryMessageDecoder();
         }
 
         public byte[] Encode(Message message)

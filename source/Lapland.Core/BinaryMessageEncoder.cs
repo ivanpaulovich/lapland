@@ -23,6 +23,11 @@ namespace Lapland.Core
 
         private void SerializeHeaders(MemoryStream buffer, Dictionary<string, string> headers)
         {
+            if (headers == null)
+            {
+                throw new MessageCodecException("Headers is null. Please provide.");
+            }
+
             SerializeInteger(buffer, headers.Count);
             
             foreach (var header in headers)
@@ -43,10 +48,15 @@ namespace Lapland.Core
 
         private void SerializeString(MemoryStream buffer, string text)
         {
+            if (text == null)
+            {
+                throw new MessageCodecException("Text is null. Please provide.");
+            }
+
             // TODO: implement the GetBytes method then remove the dependency on System.IO
             byte[] sourceSerializedText = Encoding.UTF8.GetBytes(text);
             if (sourceSerializedText.Length > MaximumHeaderNameLength)
-                throw new MessageCodecException();
+                throw new MessageCodecException($"Header data is longer that { MaximumHeaderNameLength }. Please provide a valid data.");
 
             byte[] boundedBuffer = new byte[MaximumHeaderNameLength];
 
@@ -60,6 +70,11 @@ namespace Lapland.Core
 
         private void SerializePayload(MemoryStream buffer, byte[] payload)
         {
+            if (payload == null)
+            {
+                throw new MessageCodecException("Payload is null. Please provide.");
+            }
+
             SerializeInteger(buffer, payload.Length);
             buffer.Write(payload, 0, payload.Length);
         }

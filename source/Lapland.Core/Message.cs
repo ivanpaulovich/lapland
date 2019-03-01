@@ -11,8 +11,11 @@ namespace Lapland.Core
             Payload = payload;
         }
 
+        //
+        // Considering that Headers has unique values for each name
+        //
+
         public Dictionary<string, string> Headers { get; }
         public byte[] Payload { get; }
-        
     }
 }
