@@ -55,13 +55,12 @@ namespace Lapland.Core
                 sourceSerializedText.Length);
 
             SerializeInteger(buffer, length);
-
-            Array.Copy(sourceSerializedText, boundedBuffer, length);
-            buffer.Write(boundedBuffer, 0, MaximumHeaderNameLength);
+            buffer.Write(sourceSerializedText, 0, length);
         }
 
         private void SerializePayload(MemoryStream buffer, byte[] payload)
         {
+            SerializeInteger(buffer, payload.Length);
             buffer.Write(payload, 0, payload.Length);
         }
     }

@@ -5,8 +5,14 @@ namespace Lapland.Core
 
     public sealed class Message
     {
-        public Dictionary<string, string> Headers { get; set; }
-        public byte[] Payload { get; set; }
+        public Message(Dictionary<string, string> headers, byte[] payload)
+        {
+            Headers = headers;
+            Payload = payload;
+        }
+
+        public Dictionary<string, string> Headers { get; }
+        public byte[] Payload { get; }
         
     }
 }

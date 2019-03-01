@@ -9,14 +9,13 @@ namespace Lapland.UnitTests
         [Fact]
         public void Encode_ReturnsByteArray_WhenSingleHeaderAndEmptyPayload()
         {
-            Message singleHeaderMessage = new Message()
-            {
-                Headers = new Dictionary<string, string>()
+            Message singleHeaderMessage = new Message(
+                new Dictionary<string, string>()
                 {
                     { "Host", "google.com" }
                 },
-                Payload = new byte[0]
-            };
+                new byte[0]
+            );
 
             BinaryMessageEncoder sut = new BinaryMessageEncoder();
             byte[] actual = sut.Encode(singleHeaderMessage);
