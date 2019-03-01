@@ -11,18 +11,31 @@ namespace Lapland.Core
         
         public byte[] Encode(Message message)
         {
-            MemoryStream buffer = new MemoryStream();
-
-            foreach (var header in message.Headers)
-                SerializeHeader(buffer, header);
-
-            SerializePayload(buffer, message.Payload);
-            
-            byte[] output = buffer.ToArray();
-            return output;
+            using(MemoryStream buffer = new MemoryStream())
+            {
+                SerializeHeaders(buffer, message.Headers);
+                SerializePayload(buffer, message.Payload);
+                
+                byte[] output = buffer.ToArray();
+                return output;
+            }
         }
 
-        private void SerializeHeader(MemoryStream buffer, KeyValuePair<string, string> header)
+        private void SerializeHeaders(MemoryStream buffer, Dictionary<string, string> headers)
+        {
+            SerializeInteger(buffer, headers.Count);
+            
+            foreach (var header in headers)
+                SerializeHeaderItem(buffer, header);
+        }
+
+        private void SerializeInteger(MemoryStream buffer, int length)
+        {
+            byte[] serializedInt = BitConverter.GetBytes(length);
+            buffer.Write(serializedInt, 0, serializedInt.Length);
+        }
+
+        private void SerializeHeaderItem(MemoryStream buffer, KeyValuePair<string, string> header)
         {
             SerializeString(buffer, header.Key);
             SerializeString(buffer, header.Value);
@@ -41,8 +54,9 @@ namespace Lapland.Core
                 MaximumHeaderNameLength,
                 sourceSerializedText.Length);
 
-            Array.Copy(sourceSerializedText, boundedBuffer, length);
+            SerializeInteger(buffer, length);
 
+            Array.Copy(sourceSerializedText, boundedBuffer, length);
             buffer.Write(boundedBuffer, 0, MaximumHeaderNameLength);
         }
 
