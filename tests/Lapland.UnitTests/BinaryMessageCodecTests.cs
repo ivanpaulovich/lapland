@@ -147,5 +147,24 @@ namespace Lapland.UnitTests
             BinaryMessageCodec codec = new BinaryMessageCodec();
             Assert.Throws<MessageCodecException>(() => codec.Encode(expectedMessage));
         }
+
+        [Fact]
+        public void EncodeDecode_ThrowsCodecException_WhenPayloadTooBig()
+        {
+            Random rnd = new Random();
+            Byte[] b = new Byte[100000000];
+            rnd.NextBytes(b);
+
+            Message expectedMessage = new Message(
+                new Dictionary<string, string>()
+                {
+                    { "MyHeader", "Test" }
+                },
+                b
+            );
+
+            BinaryMessageCodec codec = new BinaryMessageCodec();
+            Assert.Throws<MessageCodecException>(() => codec.Encode(expectedMessage));
+        }
     }
 }

@@ -8,6 +8,7 @@ namespace Lapland.Core
     public sealed class BinaryMessageEncoder
     {
         private const int MaximumHeaderNameLength = 1023;
+        private const int MaximumPayloadLenght = 256000;
         
         public byte[] Encode(Message message)
         {
@@ -73,6 +74,11 @@ namespace Lapland.Core
             if (payload == null)
             {
                 throw new MessageCodecException("Payload is null. Please provide.");
+            }
+
+            if (payload.Length > MaximumPayloadLenght)
+            {
+                throw new MessageCodecException($"Payload shold be less than { MaximumPayloadLenght }. Please provide.");
             }
 
             SerializeInteger(buffer, payload.Length);
